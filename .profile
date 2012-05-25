@@ -40,8 +40,16 @@ function find-git-root() {
  echo $A
 }
 
-function git-pull-request() { hub pull-request "$1" -h gamechanger:$(git-get-branch) | xargs open; }
+export SLUGX="[ ,\.]"
+function slug() { echo $@ | sed -e "s/${SLUGX}${SLUGX}*/_/g" -e "s/^_*\(.*\)_*$/\1/" | tr '[:upper:]' '[:lower:]'; }
+
+function git-pull-request() {
+    local message=$@
+    hub pull-request "$message" -h gamechanger:$(git-get-branch) | xargs open
+}
 function git-pickaxe() { git log -S"$1"; }
+function git-delete-branch() { git branch -D $1; git push origin :$1; }
+function git-checkout-topic() { git checkout -b ks_`slug $@`; }
 
 alias api="code gcapi"
 alias web="code gcweb"
@@ -65,6 +73,9 @@ alias gpull="git pull --rebase"
 alias gco="git checkout"
 alias gb="git checkout -b"
 alias g0="gco master"
+alias gdbr="git-delete-branch"
+alias start="git-checkout-topic"
+alias done="git checkout master"
+alias cleanup="git-delete-branch"
 
-#export PS1='$(fancy-virtualenv)\[\e[1;31m\]$(git-current-repo)\[\e[1;33m\]$(fancy-git-branch)\[\e[0;39m\]|\[\e[0;39m\]\W $ '
 export PS1='\[\e[1;31m\]$(git-current-repo)\[\e[1;33m\]$(fancy-git-branch)\[\e[0;39m\]|\[\e[0;39m\]\W $ '
