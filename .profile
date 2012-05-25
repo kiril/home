@@ -30,7 +30,7 @@ function git-get-branch() { git branch --no-color 2> /dev/null | sed -e '/^[^*]/
 function fancy-git-branch() { git-get-branch | sed -e 's/\(.*\)/ → \1/'; }
 function git-current-repo() { git config --get remote.origin.url | sed -e "s/.*\/\(.*\)\.git/\1/" -e 's/^gc//'; }
 function current-virtualenv() { echo $VIRTUAL_ENV | sed -e "s/.*\/\(.*\)/\1/"; }
-function fancy-virtualenv() { current-virtualenv | sed -e "s/\([^\s]+\)/(\1)/"; }
+function fancy-virtualenv() { echo `current-virtualenv` | sed -e "s/\([^\s]+\)/(\1)/"; }
 
 function find-git-root() {
  A=.
@@ -57,12 +57,13 @@ alias gd="git diff"
 alias gow="git show"
 alias gash="git stash"
 alias grb="git rebase"
-alias gsync="git pull --rebase && git push origin `git-get-branch`"
+alias gsync="git pull --rebase && git push origin $(git-get-branch)"
 alias gpr="git-pull-request"
 alias gpx="git-pickaxe"
-alias gpush="git push origin `git-get-branch`"
+alias gpush="git push origin $(git-get-branch)"
 alias gpull="git pull --rebase"
 alias gco="git checkout"
 alias gb="git checkout -b"
 
-export PS1='$(fancy-virtualenv)\[\e[1;31m\]$(git-current-repo)\[\e[1;33m\]$(fancy-git-branch)\[\e[0;39m\]|\[\e[0;39m\]\W $ '
+#export PS1='$(fancy-virtualenv)\[\e[1;31m\]$(git-current-repo)\[\e[1;33m\]$(fancy-git-branch)\[\e[0;39m\]|\[\e[0;39m\]\W $ '
+export PS1='\[\e[1;31m\]$(git-current-repo)\[\e[1;33m\]$(fancy-git-branch)\[\e[0;39m\]|\[\e[0;39m\]\W $ '
