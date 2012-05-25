@@ -1,0 +1,12 @@
+[color]
+	ui = always
+[user]
+	name = Kiril Savino
+	email = kiril@gamechanger.io
+[alias]
+	co = checkout
+	pr = pull-request
+[core]
+	editor = emacs
+[help]
+	autocorrect = 1
