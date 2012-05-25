@@ -64,6 +64,7 @@ alias gpush="git push origin \$(git-get-branch)"
 alias gpull="git pull --rebase"
 alias gco="git checkout"
 alias gb="git checkout -b"
+alias g0="gco master"
 
 #export PS1='$(fancy-virtualenv)\[\e[1;31m\]$(git-current-repo)\[\e[1;33m\]$(fancy-git-branch)\[\e[0;39m\]|\[\e[0;39m\]\W $ '
 export PS1='\[\e[1;31m\]$(git-current-repo)\[\e[1;33m\]$(fancy-git-branch)\[\e[0;39m\]|\[\e[0;39m\]\W $ '
