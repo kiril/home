@@ -1,7 +1,37 @@
+# Fun
+export CLICOLOR=1
+export LSCOLORS=ExFxCxDxBxegedabagacad
+
+# XCode
+export C_INCLUDE_PATH=$C_INCLUDE_PATH:/Developer/SDKs/MacOSX10.6.sdk/usr/include
+export LIBRARY_PATH=$LIBRARY_PATH:/Developer/SDKs/MacOSX10.6.sdk/usr/lib
+export C_INCLUDE_PATH=$C_INCLUDE_PATH:/Developer/SDKs/MacOSX10.7.sdk/usr/include
+export LIBRARY_PATH=$LIBRARY_PATH:/Developer/SDKs/MacOSX10.7.sdk/usr/lib
+
+# Java
+export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
+
+# EC2
+export EC2_HOME=/usr/local/ec2
+export EC2_PRIVATE_KEY=~/.ec2/pk-Z7A6FSWQJ65GA7HZPTYM5BVTNMZZCJH3.pem
+export EC2_CERT=~/.ec2/cert-Z7A6FSWQJ65GA7HZPTYM5BVTNMZZCJH3.pem
+
+# Python
+export PYTHONSTARTUP=~/.python
+export PYTHONPATH=.:/sites/django
+export DJANGO_SETTINGS_MODULE=gcapi.settings
+
 export WORKON_HOME=/gc/env
+
+if [ -f $HOME/.code ]
+then
+    source $HOME/.code
+fi
+
 source /usr/local/bin/virtualenvwrapper.sh
 
-export CODE="$HOME/code"
+export CODE=${CODE-"$HOME/code"}
+export REPO_PREFIX=${REPO_PREFIX-"gc"}
 
 function end-of-path { echo $1 | sed -e "s/.*\/\(.*\)/\1/"; }
 function pwd-name() { end-of-path `pwd`; }
@@ -17,7 +47,7 @@ function in-list() {
 }
 
 function code() {
-    cd $CODE/$1;
+    cd ${CODE}/${REPO_PREFIX}$1;
 #    local here=$(pwd-name);
 #    local envs=`lsvirtualenv`
 #    if in-list $here $envs
@@ -28,7 +58,7 @@ function code() {
 
 function git-get-branch() { git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'; }
 function fancy-git-branch() { git-get-branch | sed -e 's/\(.*\)/ → \1/'; }
-function git-current-repo() { git config --get remote.origin.url | sed -e "s/.*\/\(.*\)\.git/\1/" -e 's/^gc//'; }
+function git-current-repo() { git config --get remote.origin.url | sed -e 's/\.git//' -e "s/.*\/\(.*\)/\1/" -e 's/^gc//'; }
 function current-virtualenv() { echo $VIRTUAL_ENV | sed -e "s/.*\/\(.*\)/\1/"; }
 function fancy-virtualenv() { echo `current-virtualenv` | sed -e "s/\([^\s]+\)/(\1)/"; }
 
@@ -51,12 +81,22 @@ function git-pickaxe() { git log -S"$1"; }
 function git-delete-branch() { git branch -D $1; git push origin :$1; }
 function git-checkout-topic() { git checkout -b ks_`slug $@`; }
 
-alias api="code gcapi"
-alias web="code gcweb"
-alias api2="code gcapi2"
-alias sys="code gcsystems"
-alias lib="code gclib"
-alias conf="code gcconfig"
+function stage-gc { pushd ~/code/gc/systems/script && python stage.py $1; popd; }
+function deploy-gc { pushd ~/code/gc/systems/script && python deploy.py $1; popd; }
+
+alias bounce="sudo apachectl restart"
+alias bing="touch apache/local.wsgi"
+alias blat="touch /sites/django/gcapi/apache/*.wsgi; touch /sites/django/gcweb/apache/*.wsgi; supervisorctl restart all"
+alias stage="stage-gc"
+alias deploy="deploy-gc"
+alias stageme="stage-gc \$(git-get-branch)"
+
+alias api="code api"
+alias web="code web"
+alias api2="code api2"
+alias sys="code systems"
+alias lib="code lib"
+alias conf="code config"
 
 alias gc="git commit"
 alias ga="git add"
