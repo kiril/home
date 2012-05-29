@@ -18,12 +18,12 @@ function in-list() {
 
 function code() {
     cd $CODE/$1;
-    local here=$(pwd-name);
-    local envs=`lsvirtualenv`
-    if in-list $here $envs
-    then
-        workon $here
-    fi
+#    local here=$(pwd-name);
+#    local envs=`lsvirtualenv`
+#    if in-list $here $envs
+#    then
+#        workon $here
+#    fi
 }
 
 function git-get-branch() { git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'; }
