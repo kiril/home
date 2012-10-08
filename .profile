@@ -1,3 +1,5 @@
+PATH=$PATH:/usr/local/sbin
+
 # Fun
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
@@ -21,7 +23,7 @@ export PYTHONSTARTUP=~/.python
 export PYTHONPATH=.:/sites/django
 export DJANGO_SETTINGS_MODULE=gcapi.settings
 
-export WORKON_HOME=/gc/env
+export WORKON_HOME=/gc/envs
 
 if [ -f $HOME/.code ]
 then
@@ -81,8 +83,8 @@ function git-pickaxe() { git log -S"$1"; }
 function git-delete-branch() { git branch -D $1; git push origin :$1; }
 function git-checkout-topic() { git checkout -b ks_`slug $@`; }
 
-function stage-gc { pushd ~/code/gc/systems/script && python stage.py $1; popd; }
-function deploy-gc { pushd ~/code/gc/systems/script && python deploy.py $1; popd; }
+function stage-gc { pushd ${CODE}/${REPO_PREFIX}systems/script && python stage.py $1; popd; }
+function deploy-gc { pushd ${CODE}/${REPO_PREFIX}systems/script && python deploy.py $1; popd; }
 
 alias bounce="sudo apachectl restart"
 alias bing="touch apache/local.wsgi"
