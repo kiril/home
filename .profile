@@ -187,7 +187,9 @@ alias drop="git-delete-branch"
 alias ezpr="git-easy-pull-request"
 alias gpr="git-pull-request"
 
-export PS1='\[\e[1;31m\]$(git-current-repo)\[\e[1;33m\]$(fancy-git-branch)\[\e[0;39m\]|\[\e[0;39m\]\W $ '
+start_underscore='\e[4m'
+end_underscore='\e[0m'
+export PS1='\[\e[1;31m\]$(start_underscore)$(git-current-repo)$(end_underscore)\[\e[1;33m\]$(fancy-git-branch)\[\e[0;39m\]|\[\e[0;39m\]\W $ '
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
