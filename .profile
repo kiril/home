@@ -20,7 +20,7 @@ export EC2_CERT=~/.ec2/cert-Z7A6FSWQJ65GA7HZPTYM5BVTNMZZCJH3.pem
 
 # Python
 export PYTHONSTARTUP=~/.python
-export PYTHONPATH=.:/sites/django
+export PYTHONPATH=/gc/gclib/python
 export DJANGO_SETTINGS_MODULE=gcapi.settings
 
 export WORKON_HOME=/gc/envs
@@ -83,8 +83,11 @@ function git-pickaxe() { git log -S"$1"; }
 function git-delete-branch() { git branch -D $1; git push origin :$1; }
 function git-checkout-topic() { git checkout -b ks_`slug $@`; }
 
-function stage-gc { pushd ${CODE}/${REPO_PREFIX}systems/script && python stage.py $1; popd; }
-function deploy-gc { pushd ${CODE}/${REPO_PREFIX}systems/script && python deploy.py $1; popd; }
+function stage-gc { pushd ${CODE}/${REPO_PREFIX}systems/script && python stage.py $@; popd; }
+function deploy-gc { pushd ${CODE}/${REPO_PREFIX}systems/script && python deploy.py $@; popd; }
+
+function ssh-tunnel { ssh -f ${2} -L ${1}:localhost:${3} -N; }
+function querysh { ssh -t batch1-prod 'sudo -u gcapp bash -c "source /gc/envs/prod/bin/activate; /gc/gcsystems/script/querysh prod"'; }
 
 alias bounce="sudo apachectl restart"
 alias bing="touch apache/local.wsgi"
@@ -121,3 +124,6 @@ alias done="git checkout master"
 alias cleanup="git-delete-branch"
 
 export PS1='\[\e[1;31m\]$(git-current-repo)\[\e[1;33m\]$(fancy-git-branch)\[\e[0;39m\]|\[\e[0;39m\]\W $ '
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
