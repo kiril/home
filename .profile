@@ -82,6 +82,14 @@ function git-pull-request() {
 function git-pickaxe() { git log -S"$1"; }
 function git-delete-branch() { git branch -D $1; git push origin :$1; }
 function git-checkout-topic() { git checkout -b ks_`slug $@`; }
+function git-unsluggify-branch() { git-get-branch | sed -e 's/^ks_\(.*\)/\1/' -e 's/_/ /g'; }
+function git-easy-pull-request() {
+    git-checkout-topic $@;
+    local message=$@;
+    git commit -am $message;
+    gpush -u
+    git-pull-request $message;
+}
 
 function stage-gc { pushd ${CODE}/${REPO_PREFIX}systems/script && python stage.py $@; popd; }
 function deploy-gc { pushd ${CODE}/${REPO_PREFIX}systems/script && python deploy.py $@; popd; }
@@ -111,7 +119,8 @@ alias gow="git show"
 alias gash="git stash"
 alias grb="git rebase"
 alias gsync="git pull --rebase && git push origin \$(git-get-branch)"
-alias gpr="git-pull-request"
+alias gpr="git-pull-request `git-unsluggify-branch`"
+alias ezpr="git-easy-pull-request"
 alias gpx="git-pickaxe"
 alias gpush="git push origin \$(git-get-branch)"
 alias gpull="git pull --rebase"
