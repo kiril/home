@@ -84,10 +84,11 @@ function git-delete-branch() { git branch -D $1; git push origin :$1; }
 function git-checkout-topic() { git checkout -b ks_`slug $@`; }
 function git-unsluggify-branch() { git-get-branch | sed -e 's/^ks_\(.*\)/\1/' -e 's/_/ /g'; }
 function git-easy-pull-request() {
-    git-checkout-topic $@;
+    git-checkout-topic $@ &&
     local message=$@;
-    git commit -am $message;
-    gpush -u
+    git add -p &&
+    git commit -m "$message" &&
+    git push origin `git-get-branch` -u &&
     git-pull-request $message;
 }
 
@@ -119,7 +120,7 @@ alias gow="git show"
 alias gash="git stash"
 alias grb="git rebase"
 alias gsync="git pull --rebase && git push origin \$(git-get-branch)"
-alias gpr="git-pull-request `git-unsluggify-branch`"
+alias gpr="git-pull-request \$(git-unsluggify-branch)"
 alias ezpr="git-easy-pull-request"
 alias gpx="git-pickaxe"
 alias gpush="git push origin \$(git-get-branch)"
