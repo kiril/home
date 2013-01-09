@@ -130,7 +130,6 @@ alias gb="git checkout -b"
 alias g0="gco master"
 alias gdbr="git-delete-branch"
 alias start="git-checkout-topic"
-alias done="git checkout master"
 alias cleanup="git-delete-branch"
 
 export PS1='\[\e[1;31m\]$(git-current-repo)\[\e[1;33m\]$(fancy-git-branch)\[\e[0;39m\]|\[\e[0;39m\]\W $ '
