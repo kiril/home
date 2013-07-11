@@ -158,6 +158,7 @@ function lsfeatures() {
 }
 
 alias bounce="sudo apachectl restart"
+alias bing="touch ./apache/local.wsgi"
 alias stage="stage-gc"
 alias deploy="deploy-gc"
 alias stageme="stage-gc \$(git-get-branch)"
