@@ -134,7 +134,9 @@ function ssh-tunnel {
 
 function querysh { ssh -t batch1-prod 'sudo -u gcapp bash -c "source /gc/envs/prod/bin/activate; /gc/gcsystems/script/querysh prod"'; }
 
-function gcssh { knife ssh -c /gc/gcchef/.chef/knife.rb -a name -x ubuntu -i /gc/gcchef/.chef/gc-apps.pem $@; }
+function gcssh {
+    knife ssh -c /gc/gcchef/.chef/knife.rb -a name -x ubuntu -i /gc/gcchef/.chef/gc-apps.pem "$1" "$2";
+}
 
 function enfeature() {
     echo "db.features.update({_id: '$1'}, {\$set: {status: 'on'}})"
