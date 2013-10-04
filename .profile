@@ -189,7 +189,7 @@ alias gpr="git-pull-request"
 
 start_underscore='\e[4m'
 end_underscore='\e[0m'
-export PS1='\[\e[1;31m\]$(start_underscore)$(git-current-repo)$(end_underscore)\[\e[1;33m\]$(fancy-git-branch)\[\e[0;39m\]|\[\e[0;39m\]\W $ '
+export PS1='\[\e[1;31m\]\e[4m$(git-current-repo)\e[0m\[\e[1;33m\]$(fancy-git-branch)\[\e[0;39m\]|\[\e[0;39m\]\W $ '
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
