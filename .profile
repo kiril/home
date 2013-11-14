@@ -20,7 +20,7 @@ export EC2_CERT=~/.ec2/cert-Z7A6FSWQJ65GA7HZPTYM5BVTNMZZCJH3.pem
 
 # Python
 export PYTHONSTARTUP=~/.python
-export PYTHONPATH=/gc/gclib/python
+export PYTHONPATH=/gc/gclib/python:$PYTHONPATH
 export DJANGO_SETTINGS_MODULE=gcapi.settings
 
 export WORKON_HOME=/gc/envs
@@ -186,6 +186,12 @@ alias stop="git-drop-current-branch"
 alias drop="git-delete-branch"
 alias ezpr="git-easy-pull-request"
 alias gpr="git-pull-request"
+alias yolo="sudo"
+alias please="sudo"
+
+# Heroku
+alias save="git push gh \$(git-get-branch)"
+alias roll="git push origin \$(git-get-branch)"
 
 start_underscore='\e[4m'
 end_underscore='\e[0m'
