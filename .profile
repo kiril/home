@@ -116,6 +116,10 @@ function fancy-git-branch-with-status() {
     echo ""
 }
 
+c_git_clean=`tput setaf 2`
+c_git_dirty=`tput setaf 1`
+c_reset=`tput sgr0`
+
 function color-by-git-status() {
     local GREEN="\033[0;32m"
     local RED="\033[0;31m"
@@ -129,50 +133,14 @@ function color-by-git-status() {
         if `git-is-clean`
         then
             COLOR=$GREEN
+            COLOR=$c_git_clean
             CHAR=$YAY
         else
             COLOR=$RED
+            COLOR=$c_git_dirty
             CHAR=$WARNING
         fi
-        echo -e "${COLOR}${1}${ENDSTYLE}"
-    fi
-}
-
-function if-git-ok() {
-    repo=`git-current-repo`
-    if [ ${#repo} -ne 0 ]
-    then
-        if `git-is-clean`
-        then
-            echo $1
-        else
-            echo ""
-        fi
-    else
-        echo ""
-    fi
-}
-
-function if-git-not-ok() {
-    repo=`git-current-repo`
-    if [ ${#repo} -ne 0 ]
-    then
-        if `git-is-clean`
-        then
-            echo ""
-        else
-            echo $1
-        fi
-    else
-        echo ""
-    fi
-}
-
-function if-not-git() {
-    repo=`git-current-repo`
-    if [ ${#repo} -eq 0 ]
-    then
-        echo $1
+        echo "${COLOR}${1}${c_reset}"
     fi
 }
 
@@ -307,7 +275,7 @@ alias roll="git push origin \$(git-get-branch)"
 
 function prompt {
     ROOK="♖"
-    export PS1="${GRAY}@$(hostname)\n${CYAN}${UND}\$(git-current-repo)${ENDSTYLE}${YELLOW}\$(fancy-git-branch)${NORMAL}|${GRAY}\W${NORMAL} ${GREEN}\$(if-git-ok $ROOK)${NORMAL}${RED}\$(if-git-not-ok $ROOK)${NORMAL}\$(if-not-git $ROOK)  "
+    export PS1="${GRAY}@$(hostname)\n${CYAN}${UND}\$(git-current-repo)${ENDSTYLE}${YELLOW}\$(fancy-git-branch)${NORMAL}|${GRAY}\W${NORMAL} \$(color-by-git-status $ROOK)  "
 }
 
 prompt
@@ -320,5 +288,5 @@ then
     source ~/.rvm/scripts/rvm
     rvm use 1.9.3@gcmobile --create
 else
-    echo -e '\[\e[4m\]no RVM installed\[\e[0m\]'
+    echo -e '\e[4mno RVM installed\e[0m'
 fi
