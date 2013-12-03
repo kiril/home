@@ -199,7 +199,7 @@ underline=`tput smul`
 nounderline=`tput rmul`
 bold=`tput bold`
 normal=`tput sgr0`
-export PS1='\[\033[36m\]$(hostname)\n\[\e[1;31m\]\e[4m$(git-current-repo)\e[0m\[\e[1;33m\]$(fancy-git-branch)\[\e[0;39m\]|\[\e[0;39m\]\W $ '
+export PS1='\[\033[36m\]$(hostname)\n\[\e[1;31m\]\[\e[4m$\](git-current-repo)\[\e[0m\]\[\e[1;33m\]$(fancy-git-branch)\[\e[0;39m\]|\[\e[0;39m\]\W $ '
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
