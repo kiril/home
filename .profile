@@ -16,12 +16,13 @@ CYAN="\[\033[0;36m\]"
 CYANBOLD="\[\033[1;36m\]"
 WHITE="\[\033[0;37m\]"
 WHITEBOLD="\[\033[1;37m\]"
+GRAY="\[\033[90m\]"
+LIGHTBLUE="\[\033[94m\]"
 
 ENDSTYLE="\[\033[0m\]"
 NORMAL="\[\033[0;39m\]"
 
 UND='\[\e[4m\]'
-NOUND='\[\e[0m\]'
 
 # Fun
 export CLICOLOR=1
@@ -47,6 +48,13 @@ export PYTHONPATH=/gc/gclib/python:$PYTHONPATH
 export DJANGO_SETTINGS_MODULE=gcapi.settings
 
 export WORKON_HOME=/gc/envs
+
+if [ -f $HOME/.git-completion.bash ]
+then
+    source $HOME/.git-completion.bash
+else
+    echo "no git completion available (~./git-completion.bash)"
+fi
 
 if [ -f $HOME/.code ]
 then
@@ -87,6 +95,87 @@ function code() {
 
 function git-get-branch() { git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'; }
 function fancy-git-branch() { git-get-branch | sed -e 's/\(.*\)/ → \1/'; }
+function git-is-clean() { git status 2>&1 | grep -q "directory clean"; }
+
+function fancy-git-branch-with-status() {
+    WARNING="⚠"
+    YAY="☺"
+    branch=`fancy-git-branch`
+    if [ "$branch" != "" ]
+    then
+        if `git-is-clean`
+        then
+            COLOR=$GREEN
+            CHAR=$YAY
+        else
+            COLOR=$RED
+            CHAR=$WARNING
+        fi
+        echo "${branch}${COLOR}${CHAR} ${ENDSTYLE}"
+    fi
+    echo ""
+}
+
+function color-by-git-status() {
+    local GREEN="\033[0;32m"
+    local RED="\033[0;31m"
+    local ENDSTYLE="\033[0m"
+
+    repo=`git-current-repo`
+    if [ ${#repo} -eq 0 ]
+    then
+        echo $1
+    else
+        if `git-is-clean`
+        then
+            COLOR=$GREEN
+            CHAR=$YAY
+        else
+            COLOR=$RED
+            CHAR=$WARNING
+        fi
+        echo -e "${COLOR}${1}${ENDSTYLE}"
+    fi
+}
+
+function if-git-ok() {
+    repo=`git-current-repo`
+    if [ ${#repo} -ne 0 ]
+    then
+        if `git-is-clean`
+        then
+            echo $1
+        else
+            echo ""
+        fi
+    else
+        echo ""
+    fi
+}
+
+function if-git-not-ok() {
+    repo=`git-current-repo`
+    if [ ${#repo} -ne 0 ]
+    then
+        if `git-is-clean`
+        then
+            echo ""
+        else
+            echo $1
+        fi
+    else
+        echo ""
+    fi
+}
+
+function if-not-git() {
+    repo=`git-current-repo`
+    if [ ${#repo} -eq 0 ]
+    then
+        echo $1
+    fi
+}
+
 function git-current-repo() { git config --get remote.origin.url | sed -e 's/\.git//' -e "s/.*\/\(.*\)/\1/" -e 's/^gc//'; }
 function current-virtualenv() { echo $VIRTUAL_ENV | sed -e "s/.*\/\(.*\)/\1/"; }
 function fancy-virtualenv() { echo `current-virtualenv` | sed -e "s/\([^\s]+\)/(\1)/"; }
@@ -216,13 +305,9 @@ alias please="sudo"
 alias save="git push gh \$(git-get-branch)"
 alias roll="git push origin \$(git-get-branch)"
 
-function new_prompt {
-    export PS1="${CYANBOLD}$(hostname)\n${RED}${UND}$(git-current-repo)${ENDSTYLE}${YELLOW}$(fancy-git-branch)${NORMAL}|\W $ "
-}
-
 function prompt {
-    char="♖"
-    export PS1="${CYANBOLD}@$(hostname)\n${RED}${UND}$(git-current-repo)${ENDSTYLE}${YELLOW}$(fancy-git-branch)${NORMAL}|${PURPLE}\W${NORMAL} ${char}  "
+    ROOK="♖"
+    export PS1="${GRAY}@$(hostname)\n${CYAN}${UND}\$(git-current-repo)${ENDSTYLE}${YELLOW}\$(fancy-git-branch)${NORMAL}|${GRAY}\W${NORMAL} ${GREEN}\$(if-git-ok $ROOK)${NORMAL}${RED}\$(if-git-not-ok $ROOK)${NORMAL}\$(if-not-git $ROOK)  "
 }
 
 prompt
