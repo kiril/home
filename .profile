@@ -1,5 +1,28 @@
 PATH=$PATH:/usr/local/sbin
 
+BLACK="\[\033[0;30m\]"
+BLACKBOLD="\[\033[1;30m\]"
+RED="\[\033[0;31m\]"
+REDBOLD="\[\033[1;31m\]"
+GREEN="\[\033[0;32m\]"
+GREENBOLD="\[\033[1;32m\]"
+YELLOW="\[\033[0;33m\]"
+YELLOWBOLD="\[\033[1;33m\]"
+BLUE="\[\033[0;34m\]"
+BLUEBOLD="\[\033[1;34m\]"
+PURPLE="\[\033[0;35m\]"
+PURPLEBOLD="\[\033[1;35m\]"
+CYAN="\[\033[0;36m\]"
+CYANBOLD="\[\033[1;36m\]"
+WHITE="\[\033[0;37m\]"
+WHITEBOLD="\[\033[1;37m\]"
+
+ENDSTYLE="\[\033[0m\]"
+NORMAL="\[\033[0;39m\]"
+
+UND='\[\e[4m\]'
+NOUND='\[\e[0m\]'
+
 # Fun
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
@@ -193,16 +216,24 @@ alias please="sudo"
 alias save="git push gh \$(git-get-branch)"
 alias roll="git push origin \$(git-get-branch)"
 
-start_underscore='\e[4m'
-end_underscore='\e[0m'
-underline=`tput smul`
-nounderline=`tput rmul`
-bold=`tput bold`
-normal=`tput sgr0`
-export PS1='\[\033[36m\]$(hostname)\n\[\e[1;31m\]\[\e[4m$\](git-current-repo)\[\e[0m\]\[\e[1;33m\]$(fancy-git-branch)\[\e[0;39m\]|\[\e[0;39m\]\W $ '
+function new_prompt {
+    export PS1="${CYANBOLD}$(hostname)\n${RED}${UND}$(git-current-repo)${ENDSTYLE}${YELLOW}$(fancy-git-branch)${NORMAL}|\W $ "
+}
+
+function prompt {
+    char="♖"
+    export PS1="${CYANBOLD}@$(hostname)\n${RED}${UND}$(git-current-repo)${ENDSTYLE}${YELLOW}$(fancy-git-branch)${NORMAL}|${PURPLE}\W${NORMAL} ${char}  "
+}
+
+prompt
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 
-source ~/.rvm/scripts/rvm
-rvm use 1.9.3@gcmobile --create
+if [ -d ~/.rvm ]
+then
+    source ~/.rvm/scripts/rvm
+    rvm use 1.9.3@gcmobile --create
+else
+    echo -e '\[\e[4m\]no RVM installed\[\e[0m\]'
+fi
